@@ -1,0 +1,88 @@
+.login {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+    url(../../assets/hero.jpg);
+  background-size: cover;
+  background-position: left;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.login-form {
+  width: 80%;
+  height: 50vh;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: var(--color-header);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.login-form h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.labels,
+input[type="text"],
+input[type="password"] {
+  display: flex;
+  flex-direction: row;
+  width: 48%;
+  margin: 0.5rem 1%;
+  padding: 1rem;
+}
+
+.labels {
+  margin-left: 15rem;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
+
+input[type="text"],
+input[type="password"] {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-background);
+  border-radius: 4px;
+  width: 48%;
+  text-align: center;
+}
+
+button[type="submit"] {
+  width: 70%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  font-size: 1.2rem;
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--color-tersiary);
+}
+
+.login-prompt {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.login-prompt a {
+  color: var(--color-footer);
+  text-decoration: none;
+}
+
+#password {
+  height: 3rem;
+  justify-content: center;
+  display: inline-block;
+  margin: 0 15rem;
+  width: 20vh;
+}

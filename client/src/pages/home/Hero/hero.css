@@ -1,0 +1,36 @@
+.hero-section {
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+    url(../../../assets/hero.jpg);
+  background-size: cover;
+  background-position: left;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5rem;
+  align-items: center;
+
+  h1 {
+    font-size: 3rem;
+    align-items: center;
+    font-weight: 800;
+    color: var(--color-footer);
+
+    text-align: center;
+  }
+  p {
+    font-size: 4rem;
+    margin: 2rem;
+  }
+}
+.cta-button {
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-top: 3rem;
+  font-size: 2rem;
+  background-color: var(--color-tersiary);
+  color: var(--color-background);
+  display: inline-block;
+  padding: 2rem;
+  border-radius: 50px;
+}
