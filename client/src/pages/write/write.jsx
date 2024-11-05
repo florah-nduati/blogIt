@@ -1,69 +1,88 @@
-import { useState, useEffect}from "react";
-import {useParams, useNavigate } from "react-router-dom";
-import useUserStore from "../store/userStore";
+import { useState } from "react";
+import { useMutation } from "react-query";
+import { useParams, useNavigate } from "react-router-dom";
 import apiBase from "../utils/api";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; 
-import axios from "axios";
+import useUserStore from "../store/userStore";
 import "./Write.css";
 
-const WritePage = () => {
+const Write = () => {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [body, setBody] = useState("");
   const [featuredImage, setFeaturedImage] = useState(null);
+  const [visibility, setVisibility] = useState(""); 
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  
+  const setUser = useUserStore((state) => state.setUser);
   const titleCharLimit = 100;
-  const excerptCharLimit = 250;
+  const excerptCharLimit = 500;
 
- 
+  const { mutate, isLoading } = useMutation({
+    mutationFn: async (blog) => {
+      
+        const response = await fetch(`${apiBase}/blogs`, {
+          method: "POST",
+          body: JSON.stringify(blog),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message);
+        }
+
+        const data = await response.json();
+        return data;
+      
+    },
+    onSuccess: (data) =>{
+      setUser(data);
+      setError("published the blog successfully");
+      setTimeout(() => navigate(`/blog/${data.id}`), 1000);
+    },
+
+    onError: () => setError("failed to publish the blog, please try again."),
+    
+  });
+
   const handleImageUpload = (e) => {
-    setFeaturedImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setFeaturedImage(URL.createObjectURL(file));
+    }
   };
 
- 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !excerpt || !body || !featuredImage) {
-      setError("All fields are required.");
+    if (!title || !excerpt || !body || !featuredImage || (visibility !== "private" && visibility !== "public")) {
+      setError("Please fill in all required fields with valid values.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("excerpt", excerpt);
-    formData.append("body", body);
-    formData.append("featuredImage", featuredImage);
+    const blog = {
+      title,
+      excerpt,
+      body,
+      featuredImage,
+      visibility,
+    };
 
-    try {
-      const response = await axios.post("http://localhost:3000/blogs", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (response.status === 201) {
-        navigate(`/blogs/${response.data.id}`); // Redirect to post detail page
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Failed to publish the blog. Please try again.");
-    }
+    mutate(blog);
   };
 
   return (
     <div className="write-page">
       <h2>Create a New Blog Post</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data" className="write-form">
+      <form onSubmit={handleSubmit} className="write-form">
         {error && <p className="error-message">{error}</p>}
 
-        {/* Featured Image Upload */}
-        <label>Featured Image (required):</label>
+        <label>Featured Image:</label>
         <input type="file" accept="image/*" onChange={handleImageUpload} required />
 
-        {/* Title Input */}
-        <label>Title (required):</label>
+        <label>Title:</label>
         <input
           type="text"
           value={title}
@@ -74,8 +93,7 @@ const WritePage = () => {
         />
         <small>{title.length}/{titleCharLimit} characters</small>
 
-        {/* Excerpt Input */}
-        <label>Excerpt (required):</label>
+        <label>Excerpt:</label>
         <textarea
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
@@ -85,20 +103,32 @@ const WritePage = () => {
         />
         <small>{excerpt.length}/{excerptCharLimit} characters</small>
 
-        {/* Body Input with Rich Text Editor */}
-        <label>Body (required):</label>
-        <ReactQuill
-          theme="snow"
+        <label>Visibility:</label>
+        <select value={visibility} onChange={(e) => setVisibility(e.target.value)} required>
+          <option value="">Choose a visibility</option>
+          <option value="private">Private</option>
+          <option value="public">Public</option>
+        </select>
+
+        <label>Body:</label>
+        <textarea
           value={body}
-          onChange={setBody}
+          onChange={(e) => setBody(e.target.value)}
           placeholder="Write your content here..."
+          required
         />
 
-        {/* Submit Button */}
-        <button type="submit" className="submit-btn">Publish</button>
+        <button type="submit" className="submit-btn" disabled={isLoading}>
+          {isLoading ? "Please wait..." : "Publish"}
+        </button>
       </form>
     </div>
   );
 };
 
-export default WritePage;
+export default Write;
+
+
+
+
+
