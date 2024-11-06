@@ -8,6 +8,7 @@ function FullBlog() {
 
   const { id } =useParams();
  const {isLoading, isError, error, data} = useQuery({
+    queryKey: ["note"],
     queryFn: async ()=>{
       const response = await fetch(`${apiBase}/blogs/${id}`, {credentials: "include"})
       
@@ -36,14 +37,14 @@ function FullBlog() {
 
   return (
     <div className="blog-post">
-      <h1 className="blog-title">{data.title}</h1>
-      <p>by {data.user.firstName} {data.user.lastName}</p>
-      <p className="blog-excerpt">{data.excerpt}</p>
-      <p className="blog-body">{data.body}</p>
+      <h1 className="blog-title">{data && data.title}</h1>
+      <p>by {data && data.user.firstName} {data && data.user.lastName}</p>
+      <p className="blog-excerpt">{data && data.excerpt}</p>
+      <p className="blog-body">{data && data.body}</p>
       <div className="blog-visibility">Visibility: <span>{data.visibility}</span></div>
       <div className="blog-meta">
-        <span className="blog-created">Created: {new Date(data.createdAt).toLocaleDateString()}</span>
-        <span className="blog-updated">Updated: {new Date(data.updatedAt).toLocaleDateString()}</span>
+        <span className="blog-created">Created: {new Date(data && data.createdAt).toLocaleDateString()}</span>
+        <span className="blog-updated">Updated: {new Date(data && data.updatedAt).toLocaleDateString()}</span>
       </div>
     </div>
   );

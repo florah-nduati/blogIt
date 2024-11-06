@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; 
 import apiBase from "../utils/api";
 import useUserStore from "../store/userStore";
 import "./Write.css";
@@ -111,12 +113,20 @@ const Write = () => {
         </select>
 
         <label>Body:</label>
-        <textarea
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          placeholder="Write your content here..."
-          required
-        />
+        <ReactQuill
+        value={body}
+        onChange={setBody}
+        placeholder="Write your content here..."
+        modules={{
+          toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ],
+        }}
+      />
 
         <button type="submit" className="submit-btn" disabled={isLoading}>
           {isLoading ? "Please wait..." : "Publish"}

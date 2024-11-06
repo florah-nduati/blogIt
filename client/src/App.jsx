@@ -50,7 +50,7 @@ function App() {
              } 
           />
           <Route 
-             path="/blog/:id" 
+             path="/Blogs" 
              element={
              <Protected>
                 <Library/>
