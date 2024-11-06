@@ -11,6 +11,7 @@ function PersonalBlogPreview({ id, title, excerpt }) {
     }
 
     return (
+        
         <div className="blog-preview">
             <div className="blog-header">
                 <h2 className="blog-title">{title}</h2>
