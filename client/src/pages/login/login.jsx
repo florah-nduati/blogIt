@@ -33,7 +33,7 @@ function Login() {
       setUser(user);
       localStorage.setItem("isAuthenticated", "true");
       setFormError("Login successful!");
-      setTimeout(() => navigate("/Write"), 1000);
+      setTimeout(() => navigate("/blogs"), 1000);
     },
     onError: () => setFormError("Invalid credentials, please try again."),
   });

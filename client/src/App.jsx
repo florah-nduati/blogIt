@@ -11,6 +11,8 @@ import Footer from "./components/Footer/footer";
 import Write from "./pages/write/write";
 import FullBlog from "./pages/fullBlog/fullBlog";
 import Library from "./pages/library/library";
+import Profile from "./pages/profile/profile";
+import Edit from "./pages/Edit/edit";
 
 
 const client = new QueryClient();
@@ -57,6 +59,23 @@ function App() {
              </Protected>
              } 
           />
+          <Route 
+             path="/profile" 
+             element={
+             <Protected>
+                <Profile/>
+             </Protected>
+             } 
+          />
+          <Route 
+             path="/edit/:id" 
+             element={
+             <Protected>
+                <Edit/>
+             </Protected> 
+             } 
+          />
+          
         </Routes>
         <Footer />
       </BrowserRouter>

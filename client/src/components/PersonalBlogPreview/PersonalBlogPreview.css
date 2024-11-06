@@ -1,0 +1,65 @@
+/* PersonalBlogPreview.css */
+
+.blog-preview {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-preview:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.blog-header {
+    margin-bottom: 10px;
+}
+
+.blog-title {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.blog-excerpt {
+    font-size: 1rem;
+    color: #666;
+    margin: 10px 0;
+}
+
+.blog-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.update-button, .delete-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.update-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.update-button span, .delete-button span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
