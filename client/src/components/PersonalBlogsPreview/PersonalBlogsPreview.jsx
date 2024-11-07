@@ -42,7 +42,7 @@ function PersonalBlogsPreview() {
         return (
             <div className="no-blogs">
                 <h3>You don't have any blogs</h3>
-                <Link to="/create" className="create-link">Create one</Link>
+                <Link to="/write" className="create-link">Create one</Link>
             </div>
         );
     }
@@ -54,7 +54,7 @@ function PersonalBlogsPreview() {
                 {blogs.map((blog, i) => (
                     <PersonalBlogPreview 
                         key={ i} 
-                        id = {blog.id}
+                        id = {blog}
                         title={blog.title} 
                         excerpt={blog.excerpt} 
                         className="blog-preview" 

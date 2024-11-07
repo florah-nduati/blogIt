@@ -68,7 +68,7 @@ function App() {
              } 
           />
           <Route 
-             path="/edit/:id" 
+             path="/edit/:blogId" 
              element={
              <Protected>
                 <Edit/>

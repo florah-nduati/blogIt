@@ -1,65 +1,51 @@
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
 import apiBase from "../utils/api";
 import useUserStore from "../store/userStore";
-//import "./Write.css";
 
 const Edit = () => {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [body, setBody] = useState("");
-  const [featuredImage, setFeaturedImage] = useState(null);
   const [visibility, setVisibility] = useState(""); 
-  const [error, setError] = useState("");
+  const [error, setError] = useState("");  // Add error state
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
   const titleCharLimit = 100;
   const excerptCharLimit = 500;
+ 
+  const { blogId } = useParams();
 
-  const { mutate, isLoading } = useMutation({
-    mutationFn: async (blog) => {
-      
-        const response = await fetch(`${apiBase}/blogs`, {
-          method: "POST",
-          body: JSON.stringify(blog),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+  const { isLoading, isError, error: queryError, data } = useQuery({
+    queryKey: ["updateBlog" ],
+    queryFn: async () => {
+      const response = await fetch(`${apiBase}/blogs/${blogId}`, {
+        credentials: "include",
+      });
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message);
-        }
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
 
-        const data = await response.json();
-        return data;
-      
+      const data = await response.json();
+      return data;
     },
-    onSuccess: (data) =>{
-      setUser(data);
-      setError("published the blog successfully");
-      setTimeout(() => navigate(`/blog/${data.id}`), 1000);
-    },
-
-    onError: () => setError("failed to publish the blog, please try again."),
-    
-  });
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFeaturedImage(URL.createObjectURL(file));
+    onSuccess: (data) => {
+      // Set data to form fields when the request is successful
+      setTitle(data.title);
+      setExcerpt(data.excerpt);
+      setBody(data.body);
+      setVisibility(data.visibility);
     }
-  };
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title || !excerpt || !body || !featuredImage || (visibility !== "private" && visibility !== "public")) {
+    if (!title || !excerpt || !body || (visibility !== "private" && visibility !== "public")) {
       setError("Please fill in all required fields with valid values.");
       return;
     }
@@ -68,21 +54,20 @@ const Edit = () => {
       title,
       excerpt,
       body,
-      featuredImage,
       visibility,
     };
 
-    mutate(blog);
+    // Submit the blog data here (e.g., make an API call to update the blog)
   };
+
+  if (isLoading) return <h2>Loading...</h2>;  // Handle loading state
+  if (isError) return <h2>{queryError.message}</h2>;  // Handle error state
 
   return (
     <div className="write-page">
-      <h2>Create a New Blog Post</h2>
+      <h2>Update Blog</h2>
       <form onSubmit={handleSubmit} className="write-form">
-        {error && <p className="error-message">{error}</p>}
-
-        <label>Featured Image:</label>
-        <input type="file" accept="image/*" onChange={handleImageUpload} required />
+        {error && <p className="error-message">{error}</p>}  {/* Show form validation errors */}
 
         <label>Title:</label>
         <input
@@ -114,19 +99,19 @@ const Edit = () => {
 
         <label>Body:</label>
         <ReactQuill
-        value={body}
-        onChange={setBody}
-        placeholder="Write your content here..."
-        modules={{
-          toolbar: [
-            [{ 'header': [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['link', 'image'],
-            ['clean']
-          ],
-        }}
-      />
+          value={body}
+          onChange={setBody}
+          placeholder="Write your content here..."
+          modules={{
+            toolbar: [
+              [{ 'header': [1, 2, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+              ['link', 'image'],
+              ['clean']
+            ],
+          }}
+        />
 
         <button type="submit" className="submit-btn" disabled={isLoading}>
           {isLoading ? "Please wait..." : "Publish"}
@@ -136,6 +121,4 @@ const Edit = () => {
   );
 };
 
-
-
-export default Edit
+export default Edit;
