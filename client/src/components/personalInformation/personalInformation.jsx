@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import useUserStore from '../../pages/store/userStore';
 import apiBase from '../../pages/utils/api';
-import './personalInformation.css'
+//import './information.css ';
 
 function PersonalInformationUpdateForm() {
   const [firstName, setFirstName] = useState('');

@@ -85,7 +85,7 @@ function Login() {
           Password
         </label>
         <input
-          type="password"
+          type="text"
           id="password"
           name="password"
           placeholder="Enter your password"

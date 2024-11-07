@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { useParams, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
 import apiBase from "../utils/api";
