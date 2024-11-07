@@ -9,8 +9,8 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
-    // Add any other cleanup you need to do
-    navigate("/login"); // Redirect to login after logout
+   
+    navigate("/login"); 
   };
 
   return (
