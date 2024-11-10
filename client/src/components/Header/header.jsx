@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./header.css";
+import useUserStore from "../../pages/store/userStore";
 
 function Header() {
   const navigate = useNavigate();
 
   const isAuthenticated = localStorage.getItem("isAuthenticated");
-
+  const user = useUserStore((state) => state.user)
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
    
@@ -32,8 +33,13 @@ function Header() {
               <li className="navigation-item">
                 <a href="/profile" className="navigation-link">Profile</a>
               </li>
+            
               <li className="navigation-item">
                 <a href="#" className="navigation-link" onClick={handleLogout}>Logout</a>
+              </li>
+
+              <li className="navigation-item">
+                <a href="#" className="navigation-link">{user.firstName}</a>
               </li>
             </>
           ) : (

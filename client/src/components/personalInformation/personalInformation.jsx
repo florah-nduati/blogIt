@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-query';
 import useUserStore from '../../pages/store/userStore';
 import apiBase from '../../pages/utils/api';
-//import './information.css ';
+import './information.css';
+import { FaCamera, FaPlus } from 'react-icons/fa';
 
 function PersonalInformationUpdateForm() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [emailAdress, setEmailAdress] = useState('');
   const [userName, setUserName] = useState('');
+  const [profileImageUrl, setProfileImageUrl] = useState('');
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' or 'error'
-  
+  const [messageType, setMessageType] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+
   const user = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);
 
@@ -51,36 +54,60 @@ function PersonalInformationUpdateForm() {
     setLastName(user.lastName);
     setEmailAdress(user.emailAdress);
     setUserName(user.userName);
+    setProfileImageUrl(user.profileImageUrl || '');
   }, [user]);
 
-  function handleUpdatePersonalInformation(e) {
+  
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('');
+      }, 2000); 
+
+      return () => clearTimeout(timer); 
+    }
+  }, [message]);
+
+  const handleProfilePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'v5fhffpd');
+    formData.append('cloud_name', 'dbxiinf5v');
+
+    setIsUploading(true);
+    try {
+      const response = await fetch(`https://api.cloudinary.com/v1_1/dbxiinf5v/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      setProfileImageUrl(data.secure_url); 
+      setMessage('Profile photo uploaded successfully');
+      setMessageType('success');
+    } catch (error) {
+      setMessage('Failed to upload profile photo');
+      setMessageType('error');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUpdatePersonalInformation = (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage(''); 
 
-    if (!firstName) {
-      setMessage('First name is required.');
-      setMessageType('error');
-      return;
-    }
-    if (!lastName) {
-      setMessage('Last name is required.');
-      setMessageType('error');
-      return;
-    }
-    if (!emailAdress) {
-      setMessage('Email address is required.');
-      setMessageType('error');
-      return;
-    }
-    if (!userName) {
-      setMessage('Username is required.');
+    if (!firstName || !lastName || !emailAdress || !userName) {
+      setMessage('All fields are required');
       setMessageType('error');
       return;
     }
 
-    // Proceed with mutation if all fields are valid
-    mutate({ firstName, lastName, emailAdress, userName });
-  }
+    mutate({ firstName, lastName, emailAdress, userName, profileImageUrl });
+  };
 
   return (
     <div className="personal-info-update-form">
@@ -93,6 +120,25 @@ function PersonalInformationUpdateForm() {
       )}
 
       <form onSubmit={handleUpdatePersonalInformation} className="form">
+        <div className="form-group profile-photo-group">
+          <label htmlFor="profile-photo" className="profile-photo-label">
+            <span className="upload-icon">
+              <FaCamera aria-hidden="true" />
+              <FaPlus aria-hidden="true" />
+            </span>
+            <input
+              type="file"
+              id="profile-photo"
+              className="profile-input"
+              accept="image/*"
+              onChange={handleProfilePhotoUpload}
+              style={{ display: 'none' }}
+            />
+          </label>
+          {isUploading && <p className="uploading-text">Uploading...</p>}
+          {profileImageUrl && <img src={profileImageUrl} alt="Profile Preview" className="profile-preview" />}
+        </div>
+
         <div className="form-group">
           <label htmlFor="first-name" className="form-label">First Name:</label>
           <input
@@ -141,11 +187,7 @@ function PersonalInformationUpdateForm() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="submit-btn"
-          disabled={isLoading}
-        >
+        <button type="submit" className="submit-btn" disabled={isLoading || isUploading}>
           {isLoading ? 'Updating...' : 'Update Info'}
         </button>
       </form>
@@ -154,4 +196,8 @@ function PersonalInformationUpdateForm() {
 }
 
 export default PersonalInformationUpdateForm;
+
+
+
+
 

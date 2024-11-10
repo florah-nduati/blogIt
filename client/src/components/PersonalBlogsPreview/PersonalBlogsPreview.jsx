@@ -11,12 +11,12 @@ function PersonalBlogsPreview() {
     const setBlogs = usePersonalBlogsStore(state => state.setBlogs);
 
     const { isLoading, isError, error } = useQuery({
-        queryKey: ["personalNotes"],
+        queryKey: ["personalBlogs"],
         queryFn: async () => {
             const response = await fetch(`${apiBase}/blogs/user`, { credentials: "include" });
-            if (response.ok === false) {
-                const error = await response.json();
-                throw new Error(error.message);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
             }
             const data = await response.json();
             return data;
@@ -53,8 +53,8 @@ function PersonalBlogsPreview() {
             <div className="blogs-container">
                 {blogs.map((blog, i) => (
                     <PersonalBlogPreview 
-                        key={ i} 
-                        id = {blog}
+                        key={i} 
+                        id={blog.id} // Use blog.id here
                         title={blog.title} 
                         excerpt={blog.excerpt} 
                         className="blog-preview" 
@@ -66,4 +66,5 @@ function PersonalBlogsPreview() {
 }
 
 export default PersonalBlogsPreview;
+
   

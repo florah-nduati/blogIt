@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import './library.css'
 import BlogPreview from '../../components/blogPreview/blogPreview';
 import blogs from '../../data/blogs';
+import { Link } from "react-router-dom";
 import apiBase from '../utils/api';
 
 function Library() {
@@ -31,6 +32,7 @@ function Library() {
     }
 
     return (
+      <div className="library">
       <div className="library-container">
         <h2>blogs</h2>
         <div className="library-content">
@@ -60,6 +62,7 @@ function Library() {
             />
           ))}
         </div>
+      </div>
       </div>
     );
 }

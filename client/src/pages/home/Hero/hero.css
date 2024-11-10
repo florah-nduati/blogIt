@@ -20,6 +20,7 @@
   }
   p {
     font-size: 4rem;
+    color: var(--color-tersiary);
     margin: 2rem;
   }
 }

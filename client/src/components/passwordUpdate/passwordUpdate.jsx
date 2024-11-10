@@ -9,7 +9,7 @@ function PasswordUpdateForm() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState(''); // 'success' or 'error'
+  const [messageType, setMessageType] = useState('');
 
   const user = useUserStore((state) => state.user);
 
@@ -47,7 +47,7 @@ function PasswordUpdateForm() {
 
   function handlePasswordUpdate(e) {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage(''); 
 
     if (!previousPassword) {
       setMessage('Previous password is required.');

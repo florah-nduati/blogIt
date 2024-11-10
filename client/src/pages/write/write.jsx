@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; 
 import apiBase from "../utils/api";
 import useUserStore from "../store/userStore";
 import "./Write.css";
+
+const CLOUD_NAME = "dbxiinf5v";
+const UPLOAD_PRESET = "v5fhffpd";
 
 const Write = () => {
   const [title, setTitle] = useState("");
@@ -21,39 +24,58 @@ const Write = () => {
 
   const { mutate, isLoading } = useMutation({
     mutationFn: async (blog) => {
-      
-        const response = await fetch(`${apiBase}/blogs`, {
-          method: "POST",
-          body: JSON.stringify(blog),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+      const response = await fetch(`${apiBase}/blogs`, {
+        method: "POST",
+        body: JSON.stringify(blog),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.message);
-        }
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+      }
 
-        const data = await response.json();
-        return data;
-      
+      const data = await response.json();
+      return data;
     },
-    onSuccess: (data) =>{
+    onSuccess: (data) => {
       setUser(data);
-      setError("published the blog successfully");
+      setError("Published the blog successfully");
       setTimeout(() => navigate(`/blog/${data.id}`), 1000);
     },
-
-    onError: () => setError("failed to publish the blog, please try again."),
-    
+    onError: () => setError("Failed to publish the blog, please try again."),
   });
 
-  const handleImageUpload = (e) => {
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Image upload failed.");
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  };
+
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFeaturedImage(URL.createObjectURL(file));
+      try {
+        const imageUrl = await uploadImageToCloudinary(file);
+        setFeaturedImage(imageUrl);
+      } catch (error) {
+        setError("Failed to upload image.");
+      }
     }
   };
 
@@ -114,19 +136,19 @@ const Write = () => {
 
         <label>Body:</label>
         <ReactQuill
-        value={body}
-        onChange={setBody}
-        placeholder="Write your content here..."
-        modules={{
-          toolbar: [
-            [{ 'header': [1, 2, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['link', 'image'],
-            ['clean']
-          ],
-        }}
-      />
+          value={body}
+          onChange={setBody}
+          placeholder="Write your content here..."
+          modules={{
+            toolbar: [
+              [{ 'header': [1, 2, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ['link', 'image'],
+              ['clean']
+            ],
+          }}
+        />
 
         <button type="submit" className="submit-btn" disabled={isLoading}>
           {isLoading ? "Please wait..." : "Publish"}

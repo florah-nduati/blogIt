@@ -1,0 +1,90 @@
+/* profileUpdate.css */
+
+.profile-update-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 20px;
+  background-color:var(--color-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+.profile-update-form h2 {
+  text-align: center;
+  color:var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.profile-update-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-update-form label {
+  font-weight: bold;
+  color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-update-form input[type="text"],
+.profile-update-form input[type="email"],
+.profile-update-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 20px;
+}
+
+.profile-update-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.profile-update-form button {
+  width: 100%;
+  padding: 12px;
+  background-color:var(--color-tersiary);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.profile-update-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.profile-update-form button:hover:not(:disabled) {
+  background-color:var(--color-secondary);
+}
+
+.message {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.message.success {
+  background-color: #e7f9e7;
+  color: #2d7d2d;
+  border: 1px solid #2d7d2d;
+}
+
+.message.error {
+  background-color: #fde7e7;
+  color: #d44343;
+  border: 1px solid #d44343;
+}
+
+  

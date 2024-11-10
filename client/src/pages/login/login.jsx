@@ -12,7 +12,7 @@ function Login() {
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading} = useMutation({
     mutationFn: async function (credentials) {
       const response = await fetch(`${apiBase}/auth/login`, {
         method: "POST",
@@ -29,8 +29,8 @@ function Login() {
       const data = await response.json();
       return data;
     },
-    onSuccess: (user) => {
-      setUser(user);
+    onSuccess: (data) => {
+      setUser(data);
       localStorage.setItem("isAuthenticated", "true");
       setFormError("Login successful!");
       setTimeout(() => navigate("/blogs"), 1000);
